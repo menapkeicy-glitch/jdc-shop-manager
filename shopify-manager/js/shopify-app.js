@@ -1183,7 +1183,33 @@ FIN DE VENTAS EN VIVO
   // Si la pregunta es sobre stock/inventario, intentar enriquecer con datos en vivo
   // del backend Shopify (solo si el server local está corriendo)
   const liveInventory = await maybeFetchLiveInventory(message);
-  if (liveInventory) {
+
+  // Caso especial: el usuario mencionó un pack que el sistema NO conoce
+  // → instruimos al agente a pedir actualización antes de responder
+  if (liveInventory && liveInventory.unknownPackMention) {
+    finalSystem += `\n\n═══════════════════════════════════════════════════
+⚠️ PACK NO RECONOCIDO POR EL SISTEMA
+═══════════════════════════════════════════════════
+El usuario mencionó "${liveInventory.unknownPackMention}" pero ese pack:
+- NO está en el mapeo manual (33 packs precisos)
+- NO está en la cache actual de packs activos de Shopify (${state.livePacks?.length || 0} packs cacheados)
+
+INSTRUCCIÓN OBLIGATORIA: NO inventes datos sobre ese pack. NO infieras componentes.
+En su lugar, responde EXACTAMENTE así:
+
+"No encuentro **${liveInventory.unknownPackMention}** en mi catálogo de packs activos.
+
+Posibles razones:
+- Es un pack que acabas de crear y aún no está sincronizado
+- El nombre está escrito distinto al de Shopify
+- Es un pack archivado o en draft
+
+Solución: dale click al botón 🔄 (arriba a la derecha) para sincronizar con Shopify. Si el pack aparece después, vuelve a preguntar."
+
+Después de esa respuesta termina. NO intentes responder con datos.
+═══════════════════════════════════════════════════`;
+    // Procedemos sin más data
+  } else if (liveInventory) {
     const grandTotal = liveInventory.components.reduce((sum, c) => sum + c.data.total, 0);
     const isAutoDiscovered = liveInventory.source === 'auto-discovered';
     const method = liveInventory.discoveryMethod;
@@ -1610,10 +1636,31 @@ function detectSalesPeriod(message) {
   return 7;
 }
 
+// Detecta si el usuario mencionó algo tipo "pack X" pero NO lo reconozco en ningún lado
+function userMentionedUnknownPack(message) {
+  const lower = message.toLowerCase();
+  // ¿Hay mención de "pack ..." en el mensaje?
+  const packMention = /pack\s+[a-záéíóúñ0-9]+/i.exec(message);
+  if (!packMention) return null;
+  // ¿Lo reconozco?
+  const found = detectPack(message);
+  if (found) return null; // ya lo reconoce, no es desconocido
+  // No lo reconozco → devuelve el texto del pack mencionado
+  return packMention[0];
+}
+
 async function maybeFetchLiveInventory(message) {
   if (!isStockQuery(message)) return null;
   const pack = detectPack(message);
-  if (!pack) return null;
+  if (!pack) {
+    // El usuario preguntó por stock pero no detecté ningún pack conocido.
+    // Si mencionó "pack X" no reconocido → marcar como "pack desconocido"
+    const unknownMention = userMentionedUnknownPack(message);
+    if (unknownMention) {
+      return { unknownPackMention: unknownMention };
+    }
+    return null;
+  }
 
   // Si es un pack auto-descubierto, primero intentar extraer SKUs del HTML real
   if (pack.needsHtmlDiscovery && pack.packInfo?.handle) {
