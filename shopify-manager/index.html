@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="JDC Shop Manager - Agente AI dedicado a operaciones del Shopify jdchouse.com" />
+  <meta name="theme-color" content="#06B6D4" />
+  <title>JDC Shop Manager · Shopify Ops</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/shopify.css" />
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2306B6D4'/%3E%3Ctext x='50' y='65' font-family='Arial' font-size='50' text-anchor='middle' fill='white' font-weight='bold'%3E%E2%9A%99%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+  <div class="layout">
+    <!-- Top bar -->
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="brand-icon">⚙</div>
+        <div class="brand-meta">
+          <h1 class="brand-name">JDC Shop Manager</h1>
+          <span class="brand-tag">Shopify Operations · jdchouse.com</span>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <span class="status-pill" id="statusPill">Verificando…</span>
+        <button class="icon-btn icon-btn-refresh" id="refreshBtn" title="Actualizar datos de Shopify" aria-label="Actualizar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          <span class="refresh-badge" id="refreshBadge" hidden>!</span>
+        </button>
+        <button class="icon-btn" id="themeToggle" title="Cambiar tema (claro/oscuro)" aria-label="Cambiar tema">
+          <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" title="Configuración" aria-label="Configuración">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main panel layout -->
+    <main class="workspace">
+      <!-- LEFT: Operations panel -->
+      <aside class="ops-panel">
+        <h2 class="panel-title">Operaciones</h2>
+
+        <!-- Quick actions stack (3 operaciones) -->
+        <div class="op-stack">
+          <button class="op-btn" data-action="mapear-packs">
+            <span class="op-num">01</span>
+            <span class="op-body">
+              <span class="op-title">Mapear packs</span>
+              <span class="op-desc">32 packs activos · análisis estratégico</span>
+            </span>
+          </button>
+          <button class="op-btn" data-action="mapear-landings">
+            <span class="op-num">02</span>
+            <span class="op-body">
+              <span class="op-title">Mapear landings</span>
+              <span class="op-desc">Todas las colecciones + estado de cada una</span>
+            </span>
+          </button>
+          <button class="op-btn" data-action="comparar-ventas">
+            <span class="op-num">03</span>
+            <span class="op-body">
+              <span class="op-title">Comparar ventas: productos vs packs</span>
+              <span class="op-desc">Canibalización, AOV, rating estratégico</span>
+            </span>
+          </button>
+          <button class="op-btn" data-action="ventas-hoy">
+            <span class="op-num">04</span>
+            <span class="op-body">
+              <span class="op-title">Ventas del día</span>
+              <span class="op-desc">Pedidos, revenue, top packs y distribución por hora</span>
+            </span>
+          </button>
+          <button class="op-btn" data-action="ventas-semana">
+            <span class="op-num">05</span>
+            <span class="op-body">
+              <span class="op-title">Ventas de la semana</span>
+              <span class="op-desc">Tendencia diaria, top sellers, AOV</span>
+            </span>
+          </button>
+          <button class="op-btn" data-action="ventas-rango">
+            <span class="op-num">06</span>
+            <span class="op-body">
+              <span class="op-title">Ventas por rango (calendario)</span>
+              <span class="op-desc">Elige fechas exactas, filtra por pack</span>
+            </span>
+          </button>
+        </div>
+
+        <!-- Sessions -->
+        <div class="sessions-block">
+          <div class="sessions-head">
+            <h3 class="stats-title">Sesiones</h3>
+            <button class="new-session-btn" id="newSessionBtn" title="Nueva sesión">+</button>
+          </div>
+          <ul class="session-list" id="sessionList"></ul>
+        </div>
+      </aside>
+
+      <!-- RIGHT: Console (chat + output) -->
+      <section class="console">
+        <div class="console-header">
+          <span class="console-tab active">Consola</span>
+          <span class="loading-tag" id="loadingTag" hidden>
+            <span class="dot-pulse"></span>
+            <span class="loading-tag-text">Analizando…</span>
+            <span class="loading-tag-time" id="loadingTime">0s</span>
+          </span>
+        </div>
+
+        <div class="console-body" id="console" aria-live="polite"></div>
+
+        <form class="prompt-bar" id="promptForm">
+          <textarea
+            id="promptInput"
+            class="prompt-input"
+            placeholder="Pega una URL para auditar, pide un análisis, propón un pack… (Enter para enviar)"
+            rows="1"
+            autocomplete="off"
+          ></textarea>
+          <button type="submit" class="prompt-send" id="sendBtn" aria-label="Enviar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <!-- Settings Modal (separate from main app) -->
+  <div class="modal-backdrop" id="settingsModal" hidden>
+    <div class="modal" role="dialog">
+      <header class="modal-header">
+        <h2 class="modal-title">Configuración</h2>
+        <button class="modal-close" id="settingsClose" aria-label="Cerrar">×</button>
+      </header>
+      <section class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="apiKeyInput">API Key de Anthropic</label>
+          <div class="key-status" id="keyStatus" hidden>
+            <span class="key-icon">🔒</span>
+            <span class="key-text" id="keyStatusText"></span>
+            <button type="button" class="btn-ghost" id="deleteApiKey">Eliminar</button>
+          </div>
+          <input type="password" id="apiKeyInput" class="input" placeholder="sk-ant-…" autocomplete="off" spellcheck="false" data-lpignore="true" />
+          <p class="form-hint">
+            Guardada solo en este navegador (localStorage exclusivo del Shop Manager).
+            No comparte storage con el otro agente. Una vez guardada, no se vuelve a ver.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="modelSelect">Modelo</label>
+          <select id="modelSelect" class="input">
+            <option value="claude-sonnet-4-5">Claude Sonnet 4.5 (recomendado)</option>
+            <option value="claude-opus-4-5">Claude Opus 4.5 (más profundo, más caro)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="contextDoc">Documento de contexto / Instrucciones</label>
+          <textarea
+            id="contextDoc"
+            class="input textarea-large"
+            rows="10"
+            placeholder="Pega aquí cualquier documento o instrucción adicional que el agente deba conocer:&#10;&#10;- Lista actualizada de productos / packs&#10;- Instrucciones específicas&#10;- Datos de la marca&#10;- Cualquier información de contexto"
+            spellcheck="false"
+          ></textarea>
+          <div class="context-meta">
+            <span id="contextChars" class="meta-chars">0 chars · 0 KB</span>
+            <span id="contextUpdated" class="meta-updated">Sin guardar</span>
+          </div>
+          <p class="form-hint">
+            Este texto se inyecta al contexto del agente con prioridad alta.
+            Útil cuando se actualicen los packs, quieras darle nuevas reglas o pegar info de la marca.
+            Si pegas un documento de productos, el agente lo usará como fuente.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <button type="button" class="btn-secondary" id="clearSessionsBtn">Borrar todas las sesiones</button>
+        </div>
+      </section>
+      <footer class="modal-footer">
+        <button class="btn-secondary" id="settingsCancel">Cancelar</button>
+        <button class="btn-primary" id="settingsSave">Guardar</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Modal: Rango de fechas para ventas -->
+  <div class="modal-backdrop" id="dateRangeModal" hidden>
+    <div class="modal" role="dialog">
+      <header class="modal-header">
+        <h2 class="modal-title">Ventas por rango de fechas</h2>
+        <button class="modal-close" id="dateRangeClose" aria-label="Cerrar">×</button>
+      </header>
+      <section class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Atajos rápidos</label>
+          <div class="date-presets">
+            <button type="button" class="preset-btn" data-preset="today">Hoy</button>
+            <button type="button" class="preset-btn" data-preset="yesterday">Ayer</button>
+            <button type="button" class="preset-btn" data-preset="7d">Últimos 7 días</button>
+            <button type="button" class="preset-btn" data-preset="15d">Últimos 15 días</button>
+            <button type="button" class="preset-btn" data-preset="30d">Últimos 30 días</button>
+            <button type="button" class="preset-btn" data-preset="this-month">Este mes</button>
+            <button type="button" class="preset-btn" data-preset="last-month">Mes pasado</button>
+            <button type="button" class="preset-btn" data-preset="this-week">Esta semana</button>
+            <button type="button" class="preset-btn" data-preset="last-week">Semana pasada</button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group form-group-half">
+            <label class="form-label" for="dateRangeFrom">Desde</label>
+            <input type="date" id="dateRangeFrom" class="input" />
+          </div>
+          <div class="form-group form-group-half">
+            <label class="form-label" for="dateRangeTo">Hasta</label>
+            <input type="date" id="dateRangeTo" class="input" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="dateRangePack">Filtrar por pack (opcional)</label>
+          <input type="text" id="dateRangePack" class="input" placeholder="Ej: PACK RELAX (deja vacío para ventas globales)" />
+          <p class="form-hint">Si especificas un pack, solo verás sus ventas. Vacío = todas las ventas del rango.</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Resumen de la consulta</label>
+          <div class="range-summary" id="rangeSummary">Selecciona un rango…</div>
+        </div>
+      </section>
+      <footer class="modal-footer">
+        <button type="button" class="btn-secondary" id="dateRangeCancel">Cancelar</button>
+        <button type="button" class="btn-primary" id="dateRangeSubmit">Consultar ventas</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="js/shopify-app.js"></script>
+</body>
+</html>
