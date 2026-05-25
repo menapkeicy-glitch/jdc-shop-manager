@@ -1,6 +1,6 @@
 [build]
-  publish = "frontend"
-  functions = "backend/functions"
+  publish = "."
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "20"
@@ -8,13 +8,18 @@
 [functions]
   node_bundler = "esbuild"
 
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
 
 [[headers]]
   for = "/css/*"
@@ -25,14 +30,3 @@
   for = "/js/*"
   [headers.values]
     Cache-Control = "public, max-age=3600"
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
